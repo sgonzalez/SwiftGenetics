@@ -40,10 +40,10 @@ Everything you need to use **SwiftGenetics** is in the `Sources/` directory. The
 
 ### Defining a Fitness Evaluator
 
-Genetic algorithms, as a black box optimizer, aim find the global maximum, so your fitness function must be formulated so that larger values are better. Types can conform to the `FitnessEvaluator` as a way to provide fitness values.
+Genetic algorithms, as a black box optimizer, aim find the global maximum, so your fitness function must be formulated so that larger values are better. Types can conform to the `SynchronousFitnessEvaluator` or `AsynchronousFitnessEvaluator` protocols as a way to provide fitness values.
 
 ```swift
-struct ExampleFitnessEvaluator: FitnessEvaluator {
+struct ExampleFitnessEvaluator: SynchronousFitnessEvaluator {
 	typealias G = MyGenomeType
 	func fitnessFor(organism: Organism<G>, solutionCallback: (G, Double) -> ()) -> Double {
 		// Example coming soon!

@@ -30,6 +30,8 @@ protocol Genome: Mutatable, Crossoverable {
 
 /// Represents a specific, individual organism with a fitness and genome.
 class Organism<G: Genome> {
+	/// A unique identifier for this organism.
+	let uuid: UUID
 	/// This organism's fitness value, or `nil` if it is unknown.0
 	var fitness: Double!
 	/// The organism's genotype.
@@ -39,6 +41,7 @@ class Organism<G: Genome> {
 	
 	/// Creates a new organism.
 	init(fitness: Double!, genotype: G, birthGeneration: Int = -1) {
+		uuid = UUID()
 		self.fitness = fitness
 		self.genotype = genotype
 		self.birthGeneration = birthGeneration
@@ -48,6 +51,7 @@ class Organism<G: Genome> {
 // Allows organisms to be compared by their fitnesses.
 extension Organism: Comparable {
 	static func < (lhs: Organism<G>, rhs: Organism<G>) -> Bool {
+		guard lhs.fitness != nil && rhs.fitness != nil else { return false }
 		return lhs.fitness < rhs.fitness
 	}
 	
