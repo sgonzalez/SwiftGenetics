@@ -14,7 +14,7 @@
 * **Genome** A collection of genes, represented by the `Genome` protocol.
 * **Organism** An individual in the population, represented by the `Organism` class (we want reference semantics here), and generic upon a `Genome` subtype, where the organism's genotype is an instance of the type that conforms to `Genome` .
 * **Population** The world in which organisms evolve, represented by the `Population` class.
-* **Environment** A configuration which is disseminated down to individual genes and controls various behaviors such as mutation, recombination, and selection.  
+* **Environment** A configuration which is disseminated down to individual genes and controls various behaviors such as mutation, recombination, and selection. You can modify environments as a GA is running.
 * **Clade** A "kind" of genetic algorithm (e.g., bit strings and trees might be two kinds clades). Clades can be built from broader clades to get more complex functionality. Clades conform to the `Genome` protocol. Clades are intended to be generic and composable. A specific GA can be thought of as being a "concretized" clade type (e.g., a tree of arithmetic operators).
 
 ### Generic Implementations
@@ -62,6 +62,7 @@ There are no external dependencies, yay! On macOS, you can get off the ground ru
 * More flexibility.
 * More extensibility.
 * More concrete implementations.
+* Support for dominance relations, like in NSGA-II.
 * Generalize `coefficient` in `LivingTreeGene`.
 * Tests (unit, integration, performance).
 * Test app that visualizes the evolution process.
