@@ -63,6 +63,14 @@ struct LivingTreeGenome<GeneType: TreeGeneType>: Genome {
 	
 }
 
+extension LivingTreeGenome: RawRepresentable {
+	typealias RawValue = RealGene
+	var rawValue: RawValue { return rootGene }
+	init?(rawValue: RawValue) {
+		self = LivingTreeGenome.init(rootGene: rawValue)
+	}
+}
+
 // Living trees can behave as genes within a living forest genome.
 extension LivingTreeGenome: Gene {
 	typealias Environment = RealGene.Environment

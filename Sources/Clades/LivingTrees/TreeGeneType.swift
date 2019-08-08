@@ -9,7 +9,7 @@
 import Foundation
 
 /// An abstract interface that all tree gene types conform to.
-protocol TreeGeneType: Equatable {
+protocol TreeGeneType: Hashable {
 	var childCount: Int { get }
 	var isBinaryType: Bool { get }
 	var isUnaryType: Bool { get }
@@ -30,6 +30,7 @@ extension TreeGeneType {
 	static var allTypes: [Self] { return nonLeafTypes + leafTypes }
 }
 
+
 /// Templates can enforce certain constraints and define gene type sampling.
 struct TreeGeneTemplate<T: TreeGeneType> {
 	/// Sampling array for binary gene types.
@@ -43,4 +44,12 @@ struct TreeGeneTemplate<T: TreeGeneType> {
 	var nonLeafTypes: [T] { return binaryTypes + unaryTypes }
 	/// A sampling array for all types.
 	var allTypes: [T] { return nonLeafTypes + leafTypes }
+}
+
+extension TreeGeneTemplate: Hashable {
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(binaryTypes)
+		hasher.combine(unaryTypes)
+		hasher.combine(leafTypes)
+	}
 }

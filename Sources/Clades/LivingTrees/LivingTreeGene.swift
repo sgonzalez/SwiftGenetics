@@ -42,22 +42,14 @@ final class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 		
 		performGeneTypeSpecificMutations(rate: rate, environment: environment)
 		
-		// Mutate type, same structure.
-		if geneType.isBinaryType {
-			geneType = template.binaryTypes.filter { $0 != geneType }.randomElement()!
-		} else if geneType.isUnaryType {
-			geneType = template.unaryTypes.filter { $0 != geneType }.randomElement() ?? template.unaryTypes.first!
-		} else if geneType.isLeafType {
-			geneType = template.leafTypes.filter { $0 != geneType }.randomElement()!
-		} else {
-			fatalError()
-		}
+		var madeStructuralMutation = false
 		
 		// Deletion mutations.
 		if Double.random(in: 0..<1) < environment.structuralMutationDeletionRate {
 			if !children.isEmpty {
 				children = []
 				geneType = template.leafTypes.randomElement()!
+				madeStructuralMutation = true
 			}
 		}
 		
@@ -77,6 +69,21 @@ final class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 				} else {
 					fatalError()
 				}
+				madeStructuralMutation = true
+			}
+		}
+		
+		// Attempt to mutate type, maintaining the same structure, only if a
+		// structural mutation has not already been made.
+		if !madeStructuralMutation {
+			if geneType.isBinaryType {
+				geneType = template.binaryTypes.filter { $0 != geneType }.randomElement()!
+			} else if geneType.isUnaryType {
+				geneType = template.unaryTypes.filter { $0 != geneType }.randomElement() ?? template.unaryTypes.first!
+			} else if geneType.isLeafType {
+				geneType = template.leafTypes.filter { $0 != geneType }.randomElement()!
+			} else {
+				fatalError()
 			}
 		}
 	}

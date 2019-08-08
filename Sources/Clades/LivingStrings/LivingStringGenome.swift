@@ -49,3 +49,11 @@ struct LivingStringGenome<GeneType: Gene>: Genome where GeneType.Environment == 
 	}
 	
 }
+
+extension LivingStringGenome: RawRepresentable where RealGene: Hashable {
+	typealias RawValue = [RealGene]
+	var rawValue: RawValue { return genes }
+	init?(rawValue: RawValue) {
+		self = LivingStringGenome.init(genes: rawValue)
+	}
+}

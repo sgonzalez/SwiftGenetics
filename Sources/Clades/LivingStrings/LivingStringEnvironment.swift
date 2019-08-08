@@ -1,6 +1,6 @@
 //
 //  LivingStringEnvironment.swift
-//  lossga
+//  SwiftGenetics
 //
 //  Created by Santiago Gonzalez on 7/9/19.
 //  Copyright © 2019 Santiago Gonzalez. All rights reserved.

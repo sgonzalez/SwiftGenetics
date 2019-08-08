@@ -13,9 +13,18 @@ protocol EvolutionLoggingDelegate {
 	associatedtype G: Genome
 	
 	/// Called at the beginning of an epoch.
+	/// - Parameter i: The epoch index.
 	func evolutionStartingEpoch(_ i: Int)
+	
 	/// Called at the end of an epoch.
-	func evolutionFinishedEpoch(_ i: Int, population: Population<G>)
+	/// - Parameter i: The epoch index.
+	/// - Parameter duration: How long the epoch took to run (elapsed wall-clock time).
+	/// - Parameter population: The population at the end of the epoch.
+	func evolutionFinishedEpoch(_ i: Int, duration: TimeInterval, population: Population<G>)
+	
 	/// Called when the stopping condition has been met.
+	/// - Parameter solution: The genome that met the stopping condition.
+	/// - Parameter fitness: The solution genome's fitness.
 	func evolutionFoundSolution(_ solution: G, fitness: Double)
+	
 }

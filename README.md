@@ -23,6 +23,10 @@
 * **Living Trees** Trees whose structure and node types are evolved.
 * **Living Forests** A fixed-size collection of coevolved trees. Evolution of Living Forests is analogous to evolution of a genome of chromosomes.
 
+The library also provides the following primitives that you can use to build your own complex genomes:
+
+* `DiscreteChoiceGene` to represent a discrete choice in a set. 
+
 
 ## Usage
 
@@ -33,7 +37,11 @@ Everything you need to use **SwiftGenetics** is in the `Sources/` directory. The
 3. Set the fitness for each `Organism` in the population's `organisms` array.
 4. Repeat steps 2 and 3 *ad infinitum* (or until you're happy with a solution).
 
-However, oftentimes you might have long-running fitness calculations that you want to run concurrently, in which case you can use `EvolutionWrapper` types as the entry point into **SwiftGenetics**. `ConcurrentSynchronousEvaluationGA` and `ConcurrentAsynchronousEvaluationGA` perform synchronous and asynchronous, respectively, fitness evaluations. These wrappers make adding a GA trivial, all you need are an initial population and a type that conforms to `EvolutionLoggingDelegate`.
+### Evolution Wrappers
+
+Oftentimes you might have long-running fitness calculations that you want to run concurrently, in which case you can use `EvolutionWrapper` types as the entry point into **SwiftGenetics**. `ConcurrentSynchronousEvaluationGA` and `ConcurrentAsynchronousEvaluationGA` perform synchronous and asynchronous, respectively, fitness evaluations. These wrappers make adding a GA trivial, all you need are an initial population and a type that conforms to `EvolutionLoggingDelegate`.
+
+One cool feature that `ConcurrentAsynchronousEvaluationGA` has is the ability to detect and efficiently handle duplicate genomes within a generation (based on their hash value from a conformance to `Hashable`).
 
 ### Concrete Example
 

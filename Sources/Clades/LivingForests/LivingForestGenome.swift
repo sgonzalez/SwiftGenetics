@@ -9,7 +9,7 @@
 import Foundation
 
 /// An evolvable forest of one or more independent trees.
-/// Note: Forests are homogeneous for now.
+/// Note: Forests have homogeneous gene types for now.
 struct LivingForestGenome<GeneType: TreeGeneType>: Genome {
 	
 	typealias RealGene = LivingTreeGenome<GeneType>
@@ -51,4 +51,12 @@ struct LivingForestGenome<GeneType: TreeGeneType>: Genome {
 		return LivingForestGenome(trees: trees.map { $0.copy() })
 	}
 	
+}
+
+extension LivingForestGenome: RawRepresentable {
+	typealias RawValue = [RealGene]
+	var rawValue: RawValue { return trees }
+	init?(rawValue: RawValue) {
+		self = LivingForestGenome.init(trees: rawValue)
+	}
 }

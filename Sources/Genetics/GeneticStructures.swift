@@ -25,7 +25,7 @@ protocol Gene: Mutatable {
 
 /// A collection of genes.
 protocol Genome: Mutatable, Crossoverable {
-	associatedtype RealGene: Gene
+	
 }
 
 /// Represents a specific, individual organism with a fitness and genome.
@@ -57,5 +57,12 @@ extension Organism: Comparable {
 	
 	static func == (lhs: Organism<G>, rhs: Organism<G>) -> Bool {
 		return lhs.fitness == rhs.fitness
+	}
+}
+
+// Organisms are hashable by their UUID.
+extension Organism: Hashable {
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(uuid)
 	}
 }

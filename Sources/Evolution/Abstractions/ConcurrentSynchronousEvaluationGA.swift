@@ -29,6 +29,7 @@ final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator,
 		for i in 0..<maxEpochs {
 			// Log start of epoch.
 			loggingDelegate.evolutionStartingEpoch(i)
+			let startDate = Date()
 			
 			// Perform an epoch.
 			population.epoch()
@@ -61,7 +62,8 @@ final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator,
 			completionSem.wait()
 			
 			// Print epoch statistics.
-			loggingDelegate.evolutionFinishedEpoch(i, population: population)
+			let elapsedInterval = Date().timeIntervalSince(startDate)
+			loggingDelegate.evolutionFinishedEpoch(i, duration: elapsedInterval, population: population)
 		}
 
 	}
