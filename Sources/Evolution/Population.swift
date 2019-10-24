@@ -37,14 +37,14 @@ class Population<G: Genome> {
 	/// Updates the population's fitness metrics for an epoch.
 	private func updateFitnessMetrics() {
 		totalFitness = 0.0
-		var highestSoFar = 0.0
+		var highestSoFar = -Double.greatestFiniteMagnitude
 		var lowestSoFar = Double.greatestFiniteMagnitude
 		for organism in organisms {
 			if organism.fitness > highestSoFar { // This is a better organism.
 				highestSoFar = organism.fitness
 				bestOrganismInGeneration = organism
 				// Check if we have a new best organism.
-				if organism.fitness > bestOrganism?.fitness ?? 0.0 {
+				if organism.fitness > bestOrganism?.fitness ?? -Double.greatestFiniteMagnitude {
 					bestOrganism = organism
 				}
 			}
