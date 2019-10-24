@@ -15,10 +15,12 @@ struct LivingStringEnvironment: GeneticEnvironment {
 	
 	var populationSize: Int
 	var selectionMethod: SelectionMethod
+	var selectableProportion: Double
 	var mutationRate: Double
 	var crossoverRate: Double
 	var numberOfElites: Int
 	var numberOfEliteCopies: Int
+	var parameters: [String : Any]
 
 	// MARK: Implementation-Specific Constants
 

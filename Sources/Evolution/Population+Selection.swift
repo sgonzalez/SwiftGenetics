@@ -41,7 +41,8 @@ extension Population {
 	
 	/// Perform tournament sampling to get an organism.
 	internal func organismFromTournament(size: Int) -> Organism<G> {
-		let playerIndices = (0..<size).map { _ in Int.random(in: 0..<organisms.count) }
+		let selectableCount = Int(Double(organisms.count) * environment.selectableProportion)
+		let playerIndices = (0..<size).map { _ in Int.random(in: (organisms.count - selectableCount)..<organisms.count) }
 		return organisms[playerIndices.max()!] // This cool trick works because the organisms are sorted with ascending fitnesses. Not to toot my own horn, but this optimization has such a palpable elegance to it.
 	}
 	

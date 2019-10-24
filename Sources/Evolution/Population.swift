@@ -14,7 +14,7 @@ class Population<G: Genome> {
 	/// The environment configuration that the population is subject to.
 	var environment: Environment
 	
-	/// The organisms in the world.
+	/// The organisms in the world. Fit organisms are at the end when sorted.
 	var organisms: [Organism<G>] = []
 	
 	/// The current generation.
@@ -75,12 +75,13 @@ class Population<G: Genome> {
 		var parents = [Organism<G>]()
 		switch environment.selectionMethod {
 		case .roulette:
+			guard environment.selectableProportion == 1.0 else { fatalError("Unimplemented.") } // TODO: Support roulette sampling with `selectableProportion`.
 			parents = (0..<numberOfParents).map { _ in organismFromRoulette() }
 		case let .tournament(size: size):
 			parents = (0..<numberOfParents).map { _ in organismFromTournament(size: size) }
 		case let .truncation(takePortion: portion):
 			while parents.count < numberOfParents {
-				parents += organisms.suffix(Int(Double(organisms.count) * portion)).suffix(numberOfParents)
+				parents += organisms.suffix(Int(Double(organisms.count) * portion * environment.selectableProportion)).suffix(numberOfParents) // NOTE: the truncation's `takePortion` stacks on top of the environment's `selectableProportion`.
 			}
 			parents = parents.suffix(numberOfParents)
 		}

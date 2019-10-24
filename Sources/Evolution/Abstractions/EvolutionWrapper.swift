@@ -17,4 +17,16 @@ protocol EvolutionWrapper {
 	var fitnessEvaluator: Eval { get }
 	/// Runs evolution on the given start population, for a maximum number of epochs.
 	func evolve(population: Population<Eval.G>, maxEpochs: Int)
+	
+	/// The functions that are called after each epoch.
+	var afterEachEpochFns: [(Int) -> ()] { get set }
+	/// Calls the passed function after each epoch. The function takes the completed generation's number.
+	/// - Note: This function just provides syntactic sugar.
+	mutating func afterEachEpoch(_ afterEachEpochFn: @escaping (Int) -> ())
+}
+
+extension EvolutionWrapper {
+	mutating func afterEachEpoch(_ afterEachEpochFn: @escaping (Int) -> ()) {
+		afterEachEpochFns.append(afterEachEpochFn)
+	}
 }

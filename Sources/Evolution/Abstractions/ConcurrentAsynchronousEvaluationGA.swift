@@ -15,6 +15,7 @@ import Foundation
 final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluator, LogDelegate: EvolutionLoggingDelegate> : EvolutionWrapper where Eval.G == LogDelegate.G, Eval.G: Hashable {
 	
 	var fitnessEvaluator: Eval
+	var afterEachEpochFns = [(Int) -> ()]()
 	
 	/// A delegate for logging information from the GA.
 	var loggingDelegate: LogDelegate
@@ -118,6 +119,11 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 			// Print epoch statistics.
 			let elapsedInterval = Date().timeIntervalSince(startDate)
 			loggingDelegate.evolutionFinishedEpoch(i, duration: elapsedInterval, population: population)
+			
+			// Execute epoch finished functions.
+			for fn in afterEachEpochFns {
+				fn(i)
+			}
 		}
 		
 	}
