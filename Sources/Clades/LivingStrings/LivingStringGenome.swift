@@ -57,3 +57,15 @@ extension LivingStringGenome: RawRepresentable where RealGene: Hashable {
 		self = LivingStringGenome.init(genes: rawValue)
 	}
 }
+
+extension LivingStringGenome: Equatable where GeneType: Equatable {
+	static func == (lhs: LivingStringGenome<GeneType>, rhs: LivingStringGenome<GeneType>) -> Bool {
+		return lhs.genes == rhs.genes
+	}
+}
+
+extension LivingStringGenome: Hashable where GeneType: Hashable {
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(genes)
+	}
+}
