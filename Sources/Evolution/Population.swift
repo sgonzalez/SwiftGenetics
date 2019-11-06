@@ -6,6 +6,14 @@
 //  Copyright © 2018 Santiago Gonzalez. All rights reserved.
 //
 
+/// Defines broad types of genetic algorithms.
+enum EvolutionAlgorithmType {
+	/// A standard, single-objective genetic algorithm.
+	case standard
+	/// Genetic Algorithm with Ladder Technique (GALT)
+	case galt
+}
+
 /// A world of organisms, genericized by a type of genome.
 class Population<G: Genome> {
 	
@@ -13,6 +21,9 @@ class Population<G: Genome> {
 	
 	/// The environment configuration that the population is subject to.
 	var environment: Environment
+	
+	/// The type of evolution that this population undergoes.
+	let evolutionType: EvolutionAlgorithmType
 	
 	/// The organisms in the world. Fit organisms are at the end when sorted.
 	var organisms: [Organism<G>] = []
@@ -29,9 +40,17 @@ class Population<G: Genome> {
 	/// This average fitness of this generation's organisms.
 	private(set) internal var averageFitness: Double = 0.0
 	
+	/// GALT's generational ladder structure.
+	var galtGenerationalLadder: GenerationalLadder<G>?
+	
 	/// Creates a new, empty population with the given environment configuration.
-	init(environment: Environment) {
+	init(environment: Environment, evolutionType: EvolutionAlgorithmType) {
 		self.environment = environment
+		self.evolutionType = evolutionType
+		
+		if evolutionType == .galt {
+			galtGenerationalLadder = GenerationalLadder<G>()
+		}
 	}
 	
 	/// Updates the population's fitness metrics for an epoch.
@@ -40,26 +59,45 @@ class Population<G: Genome> {
 		var highestSoFar = -Double.greatestFiniteMagnitude
 		var lowestSoFar = Double.greatestFiniteMagnitude
 		for organism in organisms {
-			if organism.fitness > highestSoFar { // This is a better organism.
-				highestSoFar = organism.fitness
-				bestOrganismInGeneration = organism
-				// Check if we have a new best organism.
-				if organism.fitness > bestOrganism?.fitness ?? -Double.greatestFiniteMagnitude {
-					bestOrganism = organism
+			if organism.fitness != nil {
+				if organism.fitness > highestSoFar { // This is a better organism.
+					highestSoFar = organism.fitness
+					bestOrganismInGeneration = organism
+					// Check if we have a new best organism.
+					if organism.fitness > bestOrganism?.fitness ?? -Double.greatestFiniteMagnitude {
+						bestOrganism = organism
+					}
 				}
+				if organism.fitness < lowestSoFar { // This is a worse organism.
+					lowestSoFar = organism.fitness
+				}
+				totalFitness += organism.fitness
 			}
-			if organism.fitness < lowestSoFar { // This is a worse organism.
-				lowestSoFar = organism.fitness
-			}
-			totalFitness += organism.fitness
 		}
 		averageFitness = totalFitness / Double(organisms.count)
 	}
 	
 	/// Performs an evolutionary epoch.
 	func epoch() {
-		// Sort existing population. Fit organisms are at the end.
-		organisms.sort()
+		// Get this generation's population.
+		switch evolutionType {
+		case .standard:
+			// Sort existing population. Fit organisms are at the end.
+			organisms.sort()
+		case .galt:
+			guard generation != 0 else {
+				organisms.sort()
+				break
+			}
+			// Establish rankings on the GALT ladder.
+			for organism in organisms {
+				galtGenerationalLadder!.processNew(organism: organism)
+			}
+			// Get the sorted population for this generation.
+			// NOTE: fitness values do not correspond to the sort order,
+			// but better organisms should still be at the end of the list.
+			organisms = galtGenerationalLadder!.newGenerationSortedOrganisms()
+		}
 		
 		// Update the population's fitness metrics for the epoch.
 		updateFitnessMetrics()

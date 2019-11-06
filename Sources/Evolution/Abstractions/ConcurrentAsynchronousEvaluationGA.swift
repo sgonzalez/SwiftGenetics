@@ -26,8 +26,8 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 		self.loggingDelegate = loggingDelegate
 	}
 	
-	func evolve(population: Population<Eval.G>, maxEpochs: Int = 1000) {
-		for i in 0..<maxEpochs {
+	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
+		for i in 0..<configuration.maxEpochs {
 			// Log start of epoch.
 			loggingDelegate.evolutionStartingEpoch(i)
 			let startDate = Date()
@@ -82,7 +82,7 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 			completionSem.wait()
 			
 			// Retrieve fitness evals.
-			var evalDependencyResults = [Eval.G: Double?]()
+			var evalDependencyResults = [Eval.G: FitnessResult?]()
 			let evalDependencyResultsSem = DispatchSemaphore(value: 1)
 			while population.organisms.contains(where: { $0.fitness == nil }) {
 				let remainingOrganisms = population.organisms.filter({ $0.fitness == nil })
@@ -94,15 +94,17 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 					let potentialResult = evalDependencyResults[organism.genotype]
 					evalDependencyResultsSem.signal()
 					if let result = potentialResult {
-						organism.fitness = result
+						organism.fitness = result?.fitness
+						organism.individualSampleLosses = result?.individualSampleLosses
 						decrementRequests()
 						continue
 					}
 					
 					DispatchQueue.global().async {
-						if let result = self.fitnessEvaluator.fitnessResultFor(organism: organism) {
+						if let result = self.fitnessEvaluator.fitnessResultFor(organism: organism, returnIndividualLosses: configuration.algorithmType == .galt) {
 							organismsSem.wait()
-							organism.fitness = result
+							organism.fitness = result.fitness
+							organism.individualSampleLosses = result.individualSampleLosses
 							organismsSem.signal()
 							evalDependencyResultsSem.wait()
 							evalDependencyResults[organism.genotype] = result

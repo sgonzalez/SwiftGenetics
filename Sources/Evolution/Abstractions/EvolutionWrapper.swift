@@ -8,6 +8,13 @@
 
 import Foundation
 
+/// The high-level configuration for a GA. Hyperparameters that are too broad to be considered part of a
+/// `GeneticEnvironment` are included here.
+struct EvolutionAlgorithmConfiguration {
+	let maxEpochs: Int
+	let algorithmType: EvolutionAlgorithmType
+}
+
 /// Implemented by types that contain a GA, simplifying the process of evolution
 /// to only require a starting population and a fitness evaluator.
 protocol EvolutionWrapper {
@@ -16,7 +23,7 @@ protocol EvolutionWrapper {
 	/// The fitness evaluator that the GA uses.
 	var fitnessEvaluator: Eval { get }
 	/// Runs evolution on the given start population, for a maximum number of epochs.
-	func evolve(population: Population<Eval.G>, maxEpochs: Int)
+	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration)
 	
 	/// The functions that are called after each epoch.
 	var afterEachEpochFns: [(Int) -> ()] { get set }

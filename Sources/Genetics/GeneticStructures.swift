@@ -32,18 +32,21 @@ protocol Genome: Mutatable, Crossoverable {
 class Organism<G: Genome> {
 	/// A unique identifier for this organism.
 	let uuid: UUID
-	/// This organism's fitness value, or `nil` if it is unknown.0
+	/// This organism's fitness value, or `nil` if it is unknown.
 	var fitness: Double!
 	/// The organism's genotype.
 	var genotype: G
+	/// An optional set of sample losses for the organism, used by GALT.
+	var individualSampleLosses: [Double]?
 	/// The generation that this organism was created in, or -1.
 	var birthGeneration: Int
 	
 	/// Creates a new organism.
-	init(fitness: Double!, genotype: G, birthGeneration: Int = -1) {
+	init(fitness: Double!, genotype: G, individualSampleLosses: [Double]? = nil, birthGeneration: Int = -1) {
 		uuid = UUID()
 		self.fitness = fitness
 		self.genotype = genotype
+		self.individualSampleLosses = individualSampleLosses
 		self.birthGeneration = birthGeneration
 	}
 }

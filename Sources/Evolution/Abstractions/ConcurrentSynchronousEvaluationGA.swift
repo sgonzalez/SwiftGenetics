@@ -26,8 +26,8 @@ final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator,
 		self.loggingDelegate = loggingDelegate
 	}
 	
-	func evolve(population: Population<Eval.G>, maxEpochs: Int = 1000) {
-		for i in 0..<maxEpochs {
+	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
+		for i in 0..<configuration.maxEpochs {
 			// Log start of epoch.
 			loggingDelegate.evolutionStartingEpoch(i)
 			let startDate = Date()
@@ -48,9 +48,11 @@ final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator,
 				}
 				
 				DispatchQueue.global().async {
-					organism.fitness = self.fitnessEvaluator.fitnessFor(organism: organism, solutionCallback: { solution, fitness in
+					let fitnessResult = self.fitnessEvaluator.fitnessFor(organism: organism, solutionCallback: { solution, fitness in
 						self.loggingDelegate.evolutionFoundSolution(solution, fitness: fitness)
-					})
+					}, returnIndividualLosses: configuration.algorithmType == .galt)
+					organism.fitness = fitnessResult.fitness
+					organism.individualSampleLosses = fitnessResult.individualSampleLosses
 					
 					remainingRequestsSem.wait()
 					remainingRequests -= 1
