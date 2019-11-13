@@ -96,7 +96,9 @@ class Population<G: Genome> {
 			// Get the sorted population for this generation.
 			// NOTE: fitness values do not correspond to the sort order,
 			// but better organisms should still be at the end of the list.
+			let originalPopulationSize = organisms.count
 			organisms = galtGenerationalLadder!.newGenerationSortedOrganisms()
+			assert(organisms.count == originalPopulationSize)
 		}
 		
 		// Update the population's fitness metrics for the epoch.
