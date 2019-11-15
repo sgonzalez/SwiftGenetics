@@ -38,14 +38,14 @@ final class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 	}
 	
 	func mutate(rate: Double, environment: Environment) {
-		guard Double.random(in: 0..<1) < rate else { return }
+		guard Double.fastRandomUniform() < rate else { return }
 		
 		performGeneTypeSpecificMutations(rate: rate, environment: environment)
 		
 		var madeStructuralMutation = false
 		
 		// Deletion mutations.
-		if Double.random(in: 0..<1) < environment.structuralMutationDeletionRate {
+		if Double.fastRandomUniform() < environment.structuralMutationDeletionRate {
 			if !children.isEmpty {
 				children = []
 				geneType = template.leafTypes.randomElement()!
@@ -54,7 +54,7 @@ final class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 		}
 		
 		// Addition mutations.
-		if Double.random(in: 0..<1) < environment.structuralMutationAdditionRate {
+		if Double.fastRandomUniform() < environment.structuralMutationAdditionRate {
 			if children.isEmpty {
 				geneType = template.nonLeafTypes.randomElement()!
 				if geneType.isBinaryType {

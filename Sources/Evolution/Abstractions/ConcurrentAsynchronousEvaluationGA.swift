@@ -20,10 +20,14 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 	/// A delegate for logging information from the GA.
 	var loggingDelegate: LogDelegate
 	
-	/// Creates a new evolution wrapper.
-	init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate) {
+	/// How long to wait before polling for fitness values again.
+	var pollingInterval: TimeInterval
+	
+	/// Creates a new asynchronous evolution wrapper.
+	init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate, pollingInterval: TimeInterval = 1.0) {
 		self.fitnessEvaluator = fitnessEvaluator
 		self.loggingDelegate = loggingDelegate
+		self.pollingInterval = pollingInterval
 	}
 	
 	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
@@ -115,7 +119,10 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 					}
 				}
 				completionSem.wait()
-				sleep(1) // Arbitrary sleep to avoid making things go crazy if the fitness evaluation check is very fast.
+				if pollingInterval > 0.0 {
+					// Arbitrary sleep to avoid making things go crazy if the fitness evaluation check is very fast.
+					usleep(UInt32(pollingInterval * 1000 * 1000))
+				}
 			}
 			
 			// Print epoch statistics.

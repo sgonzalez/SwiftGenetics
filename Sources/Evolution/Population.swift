@@ -103,7 +103,7 @@ class Population<G: Genome> {
 		
 		// Update the population's fitness metrics for the epoch.
 		updateFitnessMetrics()
-		
+//organisms.shuffle()
 		// Create a new, empty population.
 		var newOrganisms = [Organism<G>]()
 		

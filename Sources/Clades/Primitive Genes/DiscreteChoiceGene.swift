@@ -20,7 +20,7 @@ struct DiscreteChoiceGene<C: DiscreteChoice, E: GeneticEnvironment>: Gene {
 	var choice: C
 	
 	mutating func mutate(rate: Double, environment: DiscreteChoiceGene<C, E>.Environment) {
-		guard Double.random(in: 0..<1) < rate else { return }
+		guard Double.fastRandomUniform() < rate else { return }
 		
 		// Select a new choice randomly.
 		choice = C.allCases.filter { $0 != choice }.randomElement()!

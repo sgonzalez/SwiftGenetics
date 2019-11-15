@@ -28,7 +28,7 @@ extension Population {
 		guard totalFitness != 0 else {
 			return organisms.randomElement()!
 		}
-		let slice = totalFitness > 0 ? Double.random(in: 0..<totalFitness) : 0.0
+		let slice = totalFitness > 0 ? Double.fastRandomUniform() * totalFitness : 0.0
 		var cumulativeFitness = 0.0
 		for organism in organisms {
 			cumulativeFitness += organism.fitness

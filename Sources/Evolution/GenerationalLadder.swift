@@ -48,10 +48,10 @@ struct GenerationalLadder<G: Genome> {
 	/// Called whenever a new organism's fitness is evaluated.
 	mutating func processNew(organism: Organism<G>) {
 		// Avoid reprocessing elites.
-		if let eliteIndex = census.firstIndex(where: { $0.organism == organism }) {
-//			census[eliteIndex].generation = currentGeneration // We still need to add the elite to the census in the current generation.
-			let rankedOrganism = RankedOrganism(rank: census[eliteIndex].rank, galtRank: census[eliteIndex].galtRank, generation: currentGeneration, organism: organism) // Duplicate the elite in the census for the current generation.
-			census.append(rankedOrganism)
+		if let eliteIndex = census.firstIndex(where: { $0.organism.uuid == organism.uuid }) {
+			census[eliteIndex].generation = currentGeneration // We still need to add the elite to the census in the current generation.
+//			let rankedOrganism = RankedOrganism(rank: census[eliteIndex].rank, galtRank: census[eliteIndex].galtRank, generation: currentGeneration, organism: organism) // Duplicate the elite in the census for the current generation.
+//			census.append(rankedOrganism)
 			return
 		}
 		// Ensure we've collected sample losses.
