@@ -23,7 +23,7 @@ struct LivingTreeGenome<GeneType: TreeGeneType>: Genome {
 	}
 	
 	func crossover(with partner: LivingTreeGenome, rate: Double, environment: Environment) -> (LivingTreeGenome, LivingTreeGenome) {
-		guard Double.random(in: 0..<1) < rate else { return (self, partner) }
+		guard Double.fastRandomUniform() < rate else { return (self, partner) }
 		guard partner.rootGene.children.count > 1 && self.rootGene.children.count > 1 else { return (self, partner) }
 		
 		var childRootA = self.rootGene.copy()

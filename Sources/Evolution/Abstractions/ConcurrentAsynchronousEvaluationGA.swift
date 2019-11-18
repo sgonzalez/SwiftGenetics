@@ -13,34 +13,38 @@ import Foundation
 /// Encapsulates a generic genetic algorithm that performs asynchronous fitness
 /// evaluations concurrently. The fitness evaluator needs to be thread-safe.
 final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluator, LogDelegate: EvolutionLoggingDelegate> : EvolutionWrapper where Eval.G == LogDelegate.G, Eval.G: Hashable {
-	
+
 	var fitnessEvaluator: Eval
 	var afterEachEpochFns = [(Int) -> ()]()
-	
+
 	/// A delegate for logging information from the GA.
 	var loggingDelegate: LogDelegate
-	
-	/// Creates a new evolution wrapper.
-	init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate) {
+
+	/// How long to wait before polling for fitness values again.
+	var pollingInterval: TimeInterval
+
+	/// Creates a new asynchronous evolution wrapper.
+	init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate, pollingInterval: TimeInterval = 1.0) {
 		self.fitnessEvaluator = fitnessEvaluator
 		self.loggingDelegate = loggingDelegate
+		self.pollingInterval = pollingInterval
 	}
-	
-	func evolve(population: Population<Eval.G>, maxEpochs: Int = 1000) {
-		for i in 0..<maxEpochs {
+
+	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
+		for i in 0..<configuration.maxEpochs {
 			// Log start of epoch.
 			loggingDelegate.evolutionStartingEpoch(i)
 			let startDate = Date()
-			
+
 			// Perform an epoch.
 			population.epoch()
-			
+
 			// Schedule fitness evals.
-			
+
 			var remainingRequests = population.organisms.count
 			let remainingRequestsSem = DispatchSemaphore(value: 1)
 			let completionSem = DispatchSemaphore(value: 0)
-			
+
 			/// Updates the remaining request and loop completion variables in a
 			/// thread-safe manner.
 			func decrementRequests() {
@@ -51,9 +55,9 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 				}
 				remainingRequestsSem.signal()
 			}
-			
+
 			var evalDependencies = [Eval.G: [Organism<Eval.G>]]()
-			
+
 			// Iterate over the population.
 			for organism in population.organisms {
 				guard organism.fitness == nil else {
@@ -62,7 +66,7 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 					remainingRequestsSem.signal()
 					continue
 				}
-				
+
 				// Check if we've already requested the fitness for this genotype.
 				let alreadyRequested = evalDependencies[organism.genotype] != nil
 				if alreadyRequested {
@@ -71,7 +75,7 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 					// Make a note of the request.
 					evalDependencies[organism.genotype] = []
 				}
-				
+
 				DispatchQueue.global().async {
 					if !alreadyRequested { // Avoid duplicate requests.
 						self.fitnessEvaluator.requestFitnessFor(organism: organism)
@@ -80,9 +84,9 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 				}
 			}
 			completionSem.wait()
-			
+
 			// Retrieve fitness evals.
-			var evalDependencyResults = [Eval.G: Double?]()
+			var evalDependencyResults = [Eval.G: FitnessResult?]()
 			let evalDependencyResultsSem = DispatchSemaphore(value: 1)
 			while population.organisms.contains(where: { $0.fitness == nil }) {
 				let remainingOrganisms = population.organisms.filter({ $0.fitness == nil })
@@ -94,40 +98,43 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 					let potentialResult = evalDependencyResults[organism.genotype]
 					evalDependencyResultsSem.signal()
 					if let result = potentialResult {
-						organism.fitness = result
+						organism.fitness = result?.fitness
 						decrementRequests()
 						continue
 					}
-					
+
 					DispatchQueue.global().async {
 						if let result = self.fitnessEvaluator.fitnessResultFor(organism: organism) {
 							organismsSem.wait()
-							organism.fitness = result
+							organism.fitness = result.fitness
 							organismsSem.signal()
 							evalDependencyResultsSem.wait()
 							evalDependencyResults[organism.genotype] = result
 							evalDependencyResultsSem.signal()
 						}
-						
+
 						decrementRequests()
 					}
 				}
 				completionSem.wait()
-				sleep(1) // Arbitrary sleep to avoid making things go crazy if the fitness evaluation check is very fast.
+				if pollingInterval > 0.0 {
+					// Arbitrary sleep to avoid making things go crazy if the fitness evaluation check is very fast.
+					usleep(UInt32(pollingInterval * 1000 * 1000))
+				}
 			}
-			
+
 			// Print epoch statistics.
 			let elapsedInterval = Date().timeIntervalSince(startDate)
 			loggingDelegate.evolutionFinishedEpoch(i, duration: elapsedInterval, population: population)
-			
+
 			// Execute epoch finished functions.
 			for fn in afterEachEpochFns {
 				fn(i)
 			}
 		}
-		
+
 	}
-	
+
 }
 
 #endif

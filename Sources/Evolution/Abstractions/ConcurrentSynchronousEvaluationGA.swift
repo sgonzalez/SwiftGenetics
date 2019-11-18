@@ -13,28 +13,28 @@ import Foundation
 /// Encapsulates a generic genetic algorithm that performs synchronous fitness
 /// evaluations concurrently. The fitness evaluator needs to be thread-safe.
 final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator, LogDelegate: EvolutionLoggingDelegate> : EvolutionWrapper where Eval.G == LogDelegate.G {
-	
+
 	var fitnessEvaluator: Eval
 	var afterEachEpochFns = [(Int) -> ()]()
-	
+
 	/// A delegate for logging information from the GA.
 	var loggingDelegate: LogDelegate
-	
+
 	/// Creates a new evolution wrapper.
 	init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate) {
 		self.fitnessEvaluator = fitnessEvaluator
 		self.loggingDelegate = loggingDelegate
 	}
-	
-	func evolve(population: Population<Eval.G>, maxEpochs: Int = 1000) {
-		for i in 0..<maxEpochs {
+
+	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
+		for i in 0..<configuration.maxEpochs {
 			// Log start of epoch.
 			loggingDelegate.evolutionStartingEpoch(i)
 			let startDate = Date()
-			
+
 			// Perform an epoch.
 			population.epoch()
-			
+
 			// Calculate fitnesses concurrently.
 			var remainingRequests = population.organisms.count
 			let remainingRequestsSem = DispatchSemaphore(value: 1)
@@ -46,12 +46,13 @@ final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator,
 					remainingRequestsSem.signal()
 					continue
 				}
-				
+
 				DispatchQueue.global().async {
-					organism.fitness = self.fitnessEvaluator.fitnessFor(organism: organism, solutionCallback: { solution, fitness in
+					let fitnessResult = self.fitnessEvaluator.fitnessFor(organism: organism, solutionCallback: { solution, fitness in
 						self.loggingDelegate.evolutionFoundSolution(solution, fitness: fitness)
 					})
-					
+					organism.fitness = fitnessResult.fitness
+
 					remainingRequestsSem.wait()
 					remainingRequests -= 1
 					if remainingRequests == 0 {
@@ -61,11 +62,11 @@ final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator,
 				}
 			}
 			completionSem.wait()
-			
+
 			// Print epoch statistics.
 			let elapsedInterval = Date().timeIntervalSince(startDate)
 			loggingDelegate.evolutionFinishedEpoch(i, duration: elapsedInterval, population: population)
-			
+
 			// Execute epoch finished functions.
 			for fn in afterEachEpochFns {
 				fn(i)
@@ -73,7 +74,7 @@ final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator,
 		}
 
 	}
-	
+
 }
 
 #endif

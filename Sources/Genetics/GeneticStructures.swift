@@ -33,6 +33,7 @@ class Organism<G: Genome> {
 	/// A unique identifier for this organism.
 	let uuid: UUID
 	/// This organism's fitness value, or `nil` if it is unknown.0
+	/// This organism's fitness value, or `nil` if it is unknown.
 	var fitness: Double!
 	/// The organism's genotype.
 	var genotype: G

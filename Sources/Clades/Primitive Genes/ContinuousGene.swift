@@ -33,7 +33,7 @@ struct ContinuousGene<R: FloatingPoint, E: GeneticEnvironment>: Gene, Equatable,
 	var value: R
 	
 	mutating func mutate(rate: Double, environment: ContinuousGene<R, E>.Environment) {
-		guard Double.random(in: 0..<1) < rate else { return }
+		guard Double.fastRandomUniform() < rate else { return }
 		
 		// Get environmental mutation parameters.
 		guard let mutationSize = environment.parameters[Param.mutationSize.rawValue] as? Double else {
