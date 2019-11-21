@@ -89,7 +89,7 @@ final public class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 	}
 	
 	/// Performs a bottom-up, depth-first enumeration of the tree, including self.
-	func bottomUpEnumerate(eachNode fn: (LivingTreeGene) -> ()) {
+	public func bottomUpEnumerate(eachNode fn: (LivingTreeGene) -> ()) {
 		for child in children {
 			child.bottomUpEnumerate(eachNode: fn)
 		}
@@ -97,7 +97,7 @@ final public class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 	}
 	
 	/// Returns all nodes in the subtree, including the current gene.
-	var allNodes: [LivingTreeGene] {
+	public var allNodes: [LivingTreeGene] {
 		var nodes: [LivingTreeGene] = [self]
 		for child in children {
 			nodes.append(contentsOf: child.allNodes)
@@ -106,14 +106,14 @@ final public class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 	}
 	
 	/// Creates a deep copy of the gene.
-	func copy(withParent: LivingTreeGene? = nil) -> LivingTreeGene {
+	public func copy(withParent: LivingTreeGene? = nil) -> LivingTreeGene {
 		let newGene = LivingTreeGene(template, geneType: geneType, parent: withParent, children: [], allowsCoefficient: allowsCoefficient)
 		newGene.children = children.map { $0.copy(withParent: newGene) }
 		return newGene
 	}
 	
 	/// Rebuilds parent connections from child connections.
-	func recursivelyResetParents() {
+	public func recursivelyResetParents() {
 		for child in children {
 			child.parent = self
 			child.recursivelyResetParents()
