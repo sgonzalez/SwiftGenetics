@@ -69,7 +69,7 @@ public class Population<G: Genome> {
 	}
 	
 	/// Performs an evolutionary epoch.
-	func epoch() {
+	public func epoch() {
 		// Get this generation's population.
 		switch evolutionType {
 		case .standard:

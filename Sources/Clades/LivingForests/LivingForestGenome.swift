@@ -10,32 +10,32 @@ import Foundation
 
 /// An evolvable forest of one or more independent trees.
 /// Note: Forests have homogeneous gene types for now.
-struct LivingForestGenome<GeneType: TreeGeneType>: Genome {
+public struct LivingForestGenome<GeneType: TreeGeneType>: Genome {
 	
-	typealias RealGene = LivingTreeGenome<GeneType>
-	typealias Environment = RealGene.Environment
+	public typealias RealGene = LivingTreeGenome<GeneType>
+	public typealias Environment = RealGene.Environment
 	
 	/// The child trees in the forest.
-	var trees: [RealGene]
+	public var trees: [RealGene]
 	
 	/// Creates a new forest given trees.
-	init(trees: [RealGene]) {
+	public init(trees: [RealGene]) {
 		self.trees = trees
 	}
 	
 	/// Convenience initializer to build a forest directly from root tree genes.
-	init(roots: [LivingTreeGene<GeneType>]) {
+	public init(roots: [LivingTreeGene<GeneType>]) {
 		trees = roots.map { RealGene(rootGene: $0) }
 	}
 	
-	mutating func mutate(rate: Double, environment: Environment) {
+	mutating public func mutate(rate: Double, environment: Environment) {
 		// Mutate each tree individually.
 		for idx in 0..<trees.count {
 			trees[idx].mutate(rate: rate, environment: environment)
 		}
 	}
 	
-	func crossover(with partner: LivingForestGenome, rate: Double, environment: Environment) -> (LivingForestGenome, LivingForestGenome) {
+	public func crossover(with partner: LivingForestGenome, rate: Double, environment: Environment) -> (LivingForestGenome, LivingForestGenome) {
 		// Recombine each child individually, imagine how recombination works on chromosomes.
 		let zippedChildren = zip(trees, partner.trees).map {
 			return $0.0.crossover(with: $0.1, rate: rate, environment: environment)
@@ -54,9 +54,9 @@ struct LivingForestGenome<GeneType: TreeGeneType>: Genome {
 }
 
 extension LivingForestGenome: RawRepresentable {
-	typealias RawValue = [RealGene]
-	var rawValue: RawValue { return trees }
-	init?(rawValue: RawValue) {
+	public typealias RawValue = [RealGene]
+	public var rawValue: RawValue { return trees }
+	public init?(rawValue: RawValue) {
 		self = LivingForestGenome.init(trees: rawValue)
 	}
 }

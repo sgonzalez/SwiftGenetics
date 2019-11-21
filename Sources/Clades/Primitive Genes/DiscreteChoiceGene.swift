@@ -10,16 +10,21 @@ import Foundation
 
 /// DIfferent types of categorical distributions should implement this protocol.
 /// - Note: Any `CaseIterable` `enum` supports `DiscreteChoice` out of the box.
-protocol DiscreteChoice: CaseIterable, Hashable { }
+public protocol DiscreteChoice: CaseIterable, Hashable { }
 
 /// A single gene that represents a discrete, categorical choice.
-struct DiscreteChoiceGene<C: DiscreteChoice, E: GeneticEnvironment>: Gene {
-	typealias Environment = E
+public struct DiscreteChoiceGene<C: DiscreteChoice, E: GeneticEnvironment>: Gene {
+	public typealias Environment = E
 	
 	/// The gene's value.
-	var choice: C
+	public var choice: C
 	
-	mutating func mutate(rate: Double, environment: DiscreteChoiceGene<C, E>.Environment) {
+	/// Creates a new gene with the given discrete value.
+	public init(choice: C) {
+		self.choice = choice
+	}
+	
+	mutating public func mutate(rate: Double, environment: DiscreteChoiceGene<C, E>.Environment) {
 		guard Double.fastRandomUniform() < rate else { return }
 		
 		// Select a new choice randomly.
@@ -28,9 +33,9 @@ struct DiscreteChoiceGene<C: DiscreteChoice, E: GeneticEnvironment>: Gene {
 }
 
 extension DiscreteChoiceGene: RawRepresentable {
-	typealias RawValue = C
-	var rawValue: RawValue { return choice }
-	init?(rawValue: RawValue) {
+	public typealias RawValue = C
+	public var rawValue: RawValue { return choice }
+	public init?(rawValue: RawValue) {
 		self = DiscreteChoiceGene.init(choice: rawValue)
 	}
 }

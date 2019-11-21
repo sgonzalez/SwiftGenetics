@@ -9,8 +9,8 @@
 import Foundation
 
 /// An element in a genetic tree, which can recursively contain a subtree of tree genes.
-final class LivingTreeGene<GeneType: TreeGeneType>: Gene {
-	typealias Environment = LivingTreeEnvironment
+final public class LivingTreeGene<GeneType: TreeGeneType>: Gene {
+	public typealias Environment = LivingTreeEnvironment
 	
 	/// The sampling template that's used for the gene types.
 	var template: TreeGeneTemplate<GeneType>
@@ -29,7 +29,7 @@ final class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 	var allowsCoefficient: Bool
 	
 	/// Creates a new tree gene.
-	init(_ template: TreeGeneTemplate<GeneType>, geneType: GeneType, parent: LivingTreeGene?, children: [LivingTreeGene], allowsCoefficient: Bool = true) {
+	public init(_ template: TreeGeneTemplate<GeneType>, geneType: GeneType, parent: LivingTreeGene?, children: [LivingTreeGene], allowsCoefficient: Bool = true) {
 		self.template = template
 		self.geneType = geneType
 		self.parent = parent
@@ -37,7 +37,7 @@ final class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 		self.allowsCoefficient = allowsCoefficient
 	}
 	
-	func mutate(rate: Double, environment: Environment) {
+	public func mutate(rate: Double, environment: Environment) {
 		guard Double.fastRandomUniform() < rate else { return }
 		
 		performGeneTypeSpecificMutations(rate: rate, environment: environment)

@@ -11,7 +11,7 @@ import Foundation
 extension Double {
 	
 	/// Returns a random number sampled from the specified Gaussian distribution.
-	static func randomGaussian(mu: Double, sigma: Double) -> Double {
+	public static func randomGaussian(mu: Double, sigma: Double) -> Double {
 		let p0 = 0.322232431088
 		let p1 = 1.0
 		let p2 = 0.342242088547

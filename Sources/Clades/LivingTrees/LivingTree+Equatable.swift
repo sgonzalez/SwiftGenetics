@@ -11,7 +11,7 @@ import Foundation
 extension LivingTreeGene: Equatable {
 	
 	// NOTE: does not compare parents.
-	static func == (lhs: LivingTreeGene, rhs: LivingTreeGene) -> Bool {
+	public static func == (lhs: LivingTreeGene, rhs: LivingTreeGene) -> Bool {
 		return
 			lhs.coefficient == rhs.coefficient &&
 			lhs.allowsCoefficient == rhs.allowsCoefficient &&

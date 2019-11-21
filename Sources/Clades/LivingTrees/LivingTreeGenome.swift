@@ -9,20 +9,25 @@
 import Foundation
 
 /// An evolvable tree.
-struct LivingTreeGenome<GeneType: TreeGeneType>: Genome {
+public struct LivingTreeGenome<GeneType: TreeGeneType>: Genome {
 	
-	typealias RealGene = LivingTreeGene<GeneType>
+	public typealias RealGene = LivingTreeGene<GeneType>
 	
 	/// The tree's root gene.
-	var rootGene: RealGene
+	public var rootGene: RealGene
 	
-	mutating func mutate(rate: Double, environment: Environment) {
+	/// Creates a new genome with the given tree root.
+	public init(rootGene: RealGene) {
+		self.rootGene = rootGene
+	}
+	
+	mutating public func mutate(rate: Double, environment: Environment) {
 		rootGene.bottomUpEnumerate { gene in
 			gene.mutate(rate: rate, environment: environment)
 		}
 	}
 	
-	func crossover(with partner: LivingTreeGenome, rate: Double, environment: Environment) -> (LivingTreeGenome, LivingTreeGenome) {
+	public func crossover(with partner: LivingTreeGenome, rate: Double, environment: Environment) -> (LivingTreeGenome, LivingTreeGenome) {
 		guard Double.fastRandomUniform() < rate else { return (self, partner) }
 		guard partner.rootGene.children.count > 1 && self.rootGene.children.count > 1 else { return (self, partner) }
 		
@@ -64,14 +69,14 @@ struct LivingTreeGenome<GeneType: TreeGeneType>: Genome {
 }
 
 extension LivingTreeGenome: RawRepresentable {
-	typealias RawValue = RealGene
-	var rawValue: RawValue { return rootGene }
-	init?(rawValue: RawValue) {
+	public typealias RawValue = RealGene
+	public var rawValue: RawValue { return rootGene }
+	public init?(rawValue: RawValue) {
 		self = LivingTreeGenome.init(rootGene: rawValue)
 	}
 }
 
 // Living trees can behave as genes within a living forest genome.
 extension LivingTreeGenome: Gene {
-	typealias Environment = RealGene.Environment
+	public typealias Environment = RealGene.Environment
 }

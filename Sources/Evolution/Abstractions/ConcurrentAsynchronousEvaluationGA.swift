@@ -12,10 +12,10 @@ import Foundation
 
 /// Encapsulates a generic genetic algorithm that performs asynchronous fitness
 /// evaluations concurrently. The fitness evaluator needs to be thread-safe.
-final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluator, LogDelegate: EvolutionLoggingDelegate> : EvolutionWrapper where Eval.G == LogDelegate.G, Eval.G: Hashable {
+final public class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluator, LogDelegate: EvolutionLoggingDelegate> : EvolutionWrapper where Eval.G == LogDelegate.G, Eval.G: Hashable {
 
-	var fitnessEvaluator: Eval
-	var afterEachEpochFns = [(Int) -> ()]()
+	public var fitnessEvaluator: Eval
+	public var afterEachEpochFns = [(Int) -> ()]()
 
 	/// A delegate for logging information from the GA.
 	var loggingDelegate: LogDelegate
@@ -24,13 +24,13 @@ final class ConcurrentAsynchronousEvaluationGA<Eval: AsynchronousFitnessEvaluato
 	var pollingInterval: TimeInterval
 
 	/// Creates a new asynchronous evolution wrapper.
-	init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate, pollingInterval: TimeInterval = 1.0) {
+	public init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate, pollingInterval: TimeInterval = 1.0) {
 		self.fitnessEvaluator = fitnessEvaluator
 		self.loggingDelegate = loggingDelegate
 		self.pollingInterval = pollingInterval
 	}
 
-	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
+	public func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
 		for i in 0..<configuration.maxEpochs {
 			// Log start of epoch.
 			loggingDelegate.evolutionStartingEpoch(i)
