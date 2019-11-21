@@ -13,20 +13,20 @@ final public class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 	public typealias Environment = LivingTreeEnvironment
 	
 	/// The sampling template that's used for the gene types.
-	var template: TreeGeneTemplate<GeneType>
+	public var template: TreeGeneTemplate<GeneType>
 	
 	/// The gene's type marker.
-	var geneType: GeneType
+	public var geneType: GeneType
 	/// A weak reference to the gene's parent gene, or `nil` if it's the root.
-	weak var parent: LivingTreeGene?
+	public weak var parent: LivingTreeGene?
 	/// Owned references to child genes.
-	var children: [LivingTreeGene]
+	public var children: [LivingTreeGene]
 	
 	/// A coefficient that isn't modified during evolution. It's a placeholder
 	/// that can be used later with CMA-ES.
-	var coefficient: Double?
+	public var coefficient: Double?
 	/// Whether the gene takes a coefficient.
-	var allowsCoefficient: Bool
+	public var allowsCoefficient: Bool
 	
 	/// Creates a new tree gene.
 	public init(_ template: TreeGeneTemplate<GeneType>, geneType: GeneType, parent: LivingTreeGene?, children: [LivingTreeGene], allowsCoefficient: Bool = true) {
