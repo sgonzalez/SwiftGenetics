@@ -22,12 +22,12 @@ public protocol TreeGeneType: Hashable {
 }
 
 extension TreeGeneType {
-	var isBinaryType: Bool { return Self.binaryTypes.contains(self) }
-	var isUnaryType: Bool { return Self.unaryTypes.contains(self) }
-	var isLeafType: Bool { return Self.leafTypes.contains(self) }
+	public var isBinaryType: Bool { return Self.binaryTypes.contains(self) }
+	public var isUnaryType: Bool { return Self.unaryTypes.contains(self) }
+	public var isLeafType: Bool { return Self.leafTypes.contains(self) }
 	
-	static var nonLeafTypes: [Self] { return binaryTypes + unaryTypes }
-	static var allTypes: [Self] { return nonLeafTypes + leafTypes }
+	public static var nonLeafTypes: [Self] { return binaryTypes + unaryTypes }
+	public static var allTypes: [Self] { return nonLeafTypes + leafTypes }
 }
 
 

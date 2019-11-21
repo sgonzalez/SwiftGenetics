@@ -61,7 +61,7 @@ public struct LivingTreeGenome<GeneType: TreeGeneType>: Genome {
 	}
 	
 	/// Returns a deep copy.
-	func copy() -> LivingTreeGenome {
+	public func copy() -> LivingTreeGenome {
 		let newRoot = self.rootGene.copy()
 		return LivingTreeGenome(rootGene: newRoot)
 	}
