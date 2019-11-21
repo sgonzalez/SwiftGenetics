@@ -43,6 +43,8 @@ Oftentimes you might have long-running fitness calculations that you want to run
 
 One cool feature that `ConcurrentAsynchronousEvaluationGA` has is the ability to detect and efficiently handle duplicate genomes within a generation (based on their hash value from a conformance to `Hashable`).
 
+An end-to-end example of evolution wrapper use can be found in `Tests/SwiftGeneticsTests/Integration/GeneticAlgorithmIntegrationTests.swift`. Specifically, the `testSortingGA` integration test shows how **SwiftGenetics** can be used to evolve vectors of continuous values.
+
 ### Concrete Example
 
 ```swift
@@ -64,16 +66,16 @@ struct ExampleFitnessEvaluator: SynchronousFitnessEvaluator {
 
 ### Dependencies
 
-There are no external dependencies, yay! On macOS, you can get off the ground running. Linux should be supported out-of-the-box too, but I haven't tested it, so feel free to let me know if something doesn't work right.
+There are no external dependencies, yeehaw! On macOS, you can get off the ground running. Linux should be supported out-of-the-box too, but I haven't tested it, so feel free to let me know if something doesn't work right.
 
 
 ## Future Work
 
-* Integrate with Swift Package Manager.
 * More flexibility.
 * More extensibility.
 * More concrete implementations.
 * Support for dominance relations, like in NSGA-II.
 * Generalize `coefficient` in `LivingTreeGene`.
-* Tests (unit, integration, performance).
+* More tests (unit, integration, performance).
 * Test app that visualizes the evolution process.
+* Checkpointing.
