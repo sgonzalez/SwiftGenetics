@@ -12,8 +12,8 @@ extension Double {
 	
 	/// Returns a pseudorandom sample from Uniform(0,1).
 	/// 
-	/// This ran faster than `Double.random(in: 0..<1)` when tested on November 13, 2019.
-	@inlinable static func fastRandomUniform() -> Double {
+	/// This ran faster than `Double.random(in: 0..<1)` when tested on November 13, 2019 with `-O`.
+	@inlinable public static func fastRandomUniform() -> Double {
 		return Double(arc4random()) / Double(UINT32_MAX)
 	}
 	

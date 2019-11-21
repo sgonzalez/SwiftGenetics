@@ -1,5 +1,5 @@
 import XCTest
-@testable import SwiftGenetics
+import SwiftGenetics
 
 final class GeneticAlgorithmIntegrationTests: XCTestCase {
 	typealias RealGene = ContinuousGene<Double, LivingStringEnvironment>
@@ -38,8 +38,10 @@ final class GeneticAlgorithmIntegrationTests: XCTestCase {
 		}
 	}
 	
+	/// Runs a GA that aims to find a sorted string of real numbers.
+	/// NOTE: this test is stochastic and may fail once in a blue moon.
     func testSortingGA() {
-		let maxEpochs = 20
+		let maxEpochs = 30
 		let stringLength = 5
 		// Define environment.
 		let environment = LivingStringEnvironment(

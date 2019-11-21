@@ -7,24 +7,24 @@
 //
 
 /// Defines broad types of genetic algorithms.
-enum EvolutionAlgorithmType {
+public enum EvolutionAlgorithmType {
 	/// A standard, single-objective genetic algorithm.
 	case standard
 }
 
 /// A world of organisms, genericized by a type of genome.
-class Population<G: Genome> {
+public class Population<G: Genome> {
 	
-	typealias Environment = G.Environment
+	public typealias Environment = G.Environment
 	
 	/// The environment configuration that the population is subject to.
-	var environment: Environment
+	public var environment: Environment
 	
 	/// The type of evolution that this population undergoes.
-	let evolutionType: EvolutionAlgorithmType
+	public let evolutionType: EvolutionAlgorithmType
 	
 	/// The organisms in the world. Fit organisms are at the end when sorted.
-	var organisms: [Organism<G>] = []
+	public var organisms: [Organism<G>] = []
 	
 	/// The current generation.
 	private(set) public var generation = 0
@@ -39,7 +39,7 @@ class Population<G: Genome> {
 	private(set) internal var averageFitness: Double = 0.0
 	
 	/// Creates a new, empty population with the given environment configuration.
-	init(environment: Environment, evolutionType: EvolutionAlgorithmType) {
+	public init(environment: Environment, evolutionType: EvolutionAlgorithmType) {
 		self.environment = environment
 		self.evolutionType = evolutionType
 	}

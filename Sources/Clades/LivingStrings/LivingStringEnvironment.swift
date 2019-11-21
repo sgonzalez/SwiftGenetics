@@ -9,19 +9,40 @@
 import Foundation
 
 /// The environment configuration for an ecosystem of living strings.
-struct LivingStringEnvironment: GeneticEnvironment {
+public struct LivingStringEnvironment: GeneticEnvironment {
 	
 	// MARK: Genetic Constants
 	
-	var populationSize: Int
-	var selectionMethod: SelectionMethod
-	var selectableProportion: Double
-	var mutationRate: Double
-	var crossoverRate: Double
-	var numberOfElites: Int
-	var numberOfEliteCopies: Int
-	var parameters: [String : Any]
+	public var populationSize: Int
+	public var selectionMethod: SelectionMethod
+	public var selectableProportion: Double
+	public var mutationRate: Double
+	public var crossoverRate: Double
+	public var numberOfElites: Int
+	public var numberOfEliteCopies: Int
+	public var parameters: [String : Any]
 
 	// MARK: Implementation-Specific Constants
 
+	
+	/// Creates a new environment.
+	public init(
+		populationSize: Int,
+		selectionMethod: SelectionMethod,
+		selectableProportion: Double,
+		mutationRate: Double,
+		crossoverRate: Double,
+		numberOfElites: Int,
+		numberOfEliteCopies: Int,
+		parameters: [String : Any]
+	) {
+		self.populationSize = populationSize
+		self.selectionMethod = selectionMethod
+		self.selectableProportion = selectableProportion
+		self.mutationRate = mutationRate
+		self.crossoverRate = crossoverRate
+		self.numberOfElites = numberOfElites
+		self.numberOfEliteCopies = numberOfEliteCopies
+		self.parameters = parameters
+	}
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 /// The types of mutations that can be performed on a real-valued gene.
-enum ContinuousMutationType {
+public enum ContinuousMutationType {
 	/// Add a sample from a uniform distribution, centered at zero, to the value.
 	case uniform
 	/// Add a sample from a Gaussian distribution, centered at zero, to the value.
@@ -17,7 +17,7 @@ enum ContinuousMutationType {
 }
 
 /// Keys to the environment's parameters dictionary that a real-valued gene uses.
-enum ContinuousEnvironmentParameter: String {
+public enum ContinuousEnvironmentParameter: String {
 	/// How large should mutations be.
 	case mutationSize // Double
 	/// The type of mutations that are performed.
@@ -25,14 +25,19 @@ enum ContinuousEnvironmentParameter: String {
 }
 
 /// Represents a single continuous value that can be evolved.
-struct ContinuousGene<R: FloatingPoint, E: GeneticEnvironment>: Gene, Equatable, Hashable {
-	typealias Environment = E
-	typealias Param = ContinuousEnvironmentParameter
+public struct ContinuousGene<R: FloatingPoint, E: GeneticEnvironment>: Gene, Equatable, Hashable {
+	public typealias Environment = E
+	public typealias Param = ContinuousEnvironmentParameter
 	
 	/// The gene's value.
-	var value: R
+	public var value: R
 	
-	mutating func mutate(rate: Double, environment: ContinuousGene<R, E>.Environment) {
+	/// Creates a new gene with the given value.
+	public init(value: R) {
+		self.value = value
+	}
+	
+	mutating public func mutate(rate: Double, environment: ContinuousGene<R, E>.Environment) {
 		guard Double.fastRandomUniform() < rate else { return }
 		
 		// Get environmental mutation parameters.
@@ -67,11 +72,11 @@ struct ContinuousGene<R: FloatingPoint, E: GeneticEnvironment>: Gene, Equatable,
 		}
 	}
 	
-	static func == (lhs: ContinuousGene, rhs: ContinuousGene) -> Bool {
+	public static func == (lhs: ContinuousGene, rhs: ContinuousGene) -> Bool {
 		return lhs.value == rhs.value // TODO: maybe this could cause issues, bad to compare IEEE float equality...
 	}
 
-	func hash(into hasher: inout Hasher) {
+	public func hash(into hasher: inout Hasher) {
 		hasher.combine(value)
 	}
 }

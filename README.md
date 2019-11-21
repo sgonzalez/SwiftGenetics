@@ -4,6 +4,8 @@
 
 **SwiftGenetics** is a genetic algorithm library that has been engineered from-scratch to be highly extensible and composable, by abstracting away different pieces of functionality, while providing concrete implementations of certain use cases, such as tree-based genomes. **SwiftGenetics** is written in pure Swift, and makes proper use of functional programming and Swift's wonderful type system. This project is provided under the MIT License (see the `LICENSE` file for more info).
 
+**SwiftGenetics** can be added to your project as a dependency with the Swift Package Manager.
+
 ## Functionality
 
 **SwiftGenetics** provides an abstracted base for genetic algorithms, intended to support different representations and genetic operators.

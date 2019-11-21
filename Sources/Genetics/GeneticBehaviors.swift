@@ -7,7 +7,7 @@
 //
 
 /// Defines different techniques for candidate selection.
-enum SelectionMethod {
+public enum SelectionMethod {
 	/// Roulette / fitness proportionate selection.
 	case roulette
 	/// Tournament selection, with a tournament size that's greater than 0.
@@ -18,13 +18,13 @@ enum SelectionMethod {
 }
 
 /// Implemented by types that can undergo mutation.
-protocol Mutatable: GeneticEnvironmentAssociable {
+public protocol Mutatable: GeneticEnvironmentAssociable {
 	/// Perform mutation. Non-idempotent.
 	mutating func mutate(rate: Double, environment: Environment)
 }
 
 /// Implemented by types that can be recombined with a partner.
-protocol Crossoverable: GeneticEnvironmentAssociable {
+public protocol Crossoverable: GeneticEnvironmentAssociable {
 	/// Perform genetic recombintion with the specified partner. Idempotent.
 	func crossover(with partner: Self, rate: Double, environment: Environment) -> (Self, Self)
 }

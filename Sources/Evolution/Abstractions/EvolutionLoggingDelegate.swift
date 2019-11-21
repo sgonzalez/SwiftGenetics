@@ -9,7 +9,7 @@
 import Foundation
 
 /// Implemented by types that can receive log events for a GA.
-protocol EvolutionLoggingDelegate {
+public protocol EvolutionLoggingDelegate {
 	associatedtype G: Genome
 	
 	/// Called at the beginning of an epoch.

@@ -7,7 +7,7 @@
 //
 
 /// A basic collection of constants in any genetic algorithm.
-protocol GeneticConstants {
+public protocol GeneticConstants {
 	/// The number of entities in the population.
 	var populationSize: Int { get }
 	

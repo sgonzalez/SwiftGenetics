@@ -9,39 +9,38 @@
 import Foundation
 
 /// An environment where evolution takes place.
-protocol GeneticEnvironment: GeneticConstants {
+public protocol GeneticEnvironment: GeneticConstants {
 	
 }
 
 /// Implemented by structures that have an associated genetic environment.
-protocol GeneticEnvironmentAssociable {
+public protocol GeneticEnvironmentAssociable {
 	associatedtype Environment: GeneticEnvironment
 }
 
 /// An individual genetic element.
-protocol Gene: Mutatable {
+public protocol Gene: Mutatable {
 	
 }
 
 /// A collection of genes.
-protocol Genome: Mutatable, Crossoverable {
+public protocol Genome: Mutatable, Crossoverable {
 	
 }
 
 /// Represents a specific, individual organism with a fitness and genome.
-class Organism<G: Genome> {
+public class Organism<G: Genome> {
 	/// A unique identifier for this organism.
-	let uuid: UUID
-	/// This organism's fitness value, or `nil` if it is unknown.0
+	public let uuid: UUID
 	/// This organism's fitness value, or `nil` if it is unknown.
-	var fitness: Double!
+	public var fitness: Double!
 	/// The organism's genotype.
-	var genotype: G
+	public var genotype: G
 	/// The generation that this organism was created in, or -1.
-	var birthGeneration: Int
+	public var birthGeneration: Int
 	
 	/// Creates a new organism.
-	init(fitness: Double!, genotype: G, birthGeneration: Int = -1) {
+	public init(fitness: Double!, genotype: G, birthGeneration: Int = -1) {
 		uuid = UUID()
 		self.fitness = fitness
 		self.genotype = genotype
@@ -51,19 +50,19 @@ class Organism<G: Genome> {
 
 // Allows organisms to be compared by their fitnesses.
 extension Organism: Comparable {
-	static func < (lhs: Organism<G>, rhs: Organism<G>) -> Bool {
+	public static func < (lhs: Organism<G>, rhs: Organism<G>) -> Bool {
 		guard lhs.fitness != nil && rhs.fitness != nil else { return false }
 		return lhs.fitness < rhs.fitness
 	}
 	
-	static func == (lhs: Organism<G>, rhs: Organism<G>) -> Bool {
+	public static func == (lhs: Organism<G>, rhs: Organism<G>) -> Bool {
 		return lhs.fitness == rhs.fitness
 	}
 }
 
 // Organisms are hashable by their UUID.
 extension Organism: Hashable {
-	func hash(into hasher: inout Hasher) {
+	public func hash(into hasher: inout Hasher) {
 		hasher.combine(uuid)
 	}
 }

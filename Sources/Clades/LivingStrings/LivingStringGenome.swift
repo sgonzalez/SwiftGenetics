@@ -9,21 +9,26 @@
 import Foundation
 
 /// An evolvable sequence of genes.
-struct LivingStringGenome<GeneType: Gene>: Genome where GeneType.Environment == LivingStringEnvironment {
+public struct LivingStringGenome<GeneType: Gene>: Genome where GeneType.Environment == LivingStringEnvironment {
 	
-	typealias RealGene = GeneType
-	typealias Environment = LivingStringEnvironment
+	public typealias RealGene = GeneType
+	public typealias Environment = LivingStringEnvironment
 	
 	/// The actual sequence of genes.
-	var genes: [RealGene]
+	public var genes: [RealGene]
 	
-	mutating func mutate(rate: Double, environment: Environment) {
+	/// Creates a new genome with the given array of genes.
+	public init(genes: [RealGene]) {
+		self.genes = genes
+	}
+	
+	mutating public func mutate(rate: Double, environment: Environment) {
 		for i in 0..<genes.count {
 			genes[i].mutate(rate: rate, environment: environment)
 		}
 	}
 	
-	func crossover(with partner: LivingStringGenome, rate: Double, environment: Environment) -> (LivingStringGenome, LivingStringGenome) {
+	public func crossover(with partner: LivingStringGenome, rate: Double, environment: Environment) -> (LivingStringGenome, LivingStringGenome) {
 		guard Double.fastRandomUniform() < rate else { return (self, partner) }
 		guard partner.genes.count > 1 && self.genes.count > 1 else { return (self, partner) }
 		
@@ -51,21 +56,21 @@ struct LivingStringGenome<GeneType: Gene>: Genome where GeneType.Environment == 
 }
 
 extension LivingStringGenome: RawRepresentable where RealGene: Hashable {
-	typealias RawValue = [RealGene]
-	var rawValue: RawValue { return genes }
-	init?(rawValue: RawValue) {
+	public typealias RawValue = [RealGene]
+	public var rawValue: RawValue { return genes }
+	public init?(rawValue: RawValue) {
 		self = LivingStringGenome.init(genes: rawValue)
 	}
 }
 
 extension LivingStringGenome: Equatable where GeneType: Equatable {
-	static func == (lhs: LivingStringGenome<GeneType>, rhs: LivingStringGenome<GeneType>) -> Bool {
+	public static func == (lhs: LivingStringGenome<GeneType>, rhs: LivingStringGenome<GeneType>) -> Bool {
 		return lhs.genes == rhs.genes
 	}
 }
 
 extension LivingStringGenome: Hashable where GeneType: Hashable {
-	func hash(into hasher: inout Hasher) {
+	public func hash(into hasher: inout Hasher) {
 		hasher.combine(genes)
 	}
 }

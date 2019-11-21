@@ -9,24 +9,25 @@
 import Foundation
 
 #if os(OSX) || os(iOS) // Linux does not have Dispatch
+// TODO: test out on Linux.
 
 /// Encapsulates a generic genetic algorithm that performs synchronous fitness
 /// evaluations concurrently. The fitness evaluator needs to be thread-safe.
-final class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator, LogDelegate: EvolutionLoggingDelegate> : EvolutionWrapper where Eval.G == LogDelegate.G {
+final public class ConcurrentSynchronousEvaluationGA<Eval: SynchronousFitnessEvaluator, LogDelegate: EvolutionLoggingDelegate> : EvolutionWrapper where Eval.G == LogDelegate.G {
 
-	var fitnessEvaluator: Eval
-	var afterEachEpochFns = [(Int) -> ()]()
+	public var fitnessEvaluator: Eval
+	public var afterEachEpochFns = [(Int) -> ()]()
 
 	/// A delegate for logging information from the GA.
 	var loggingDelegate: LogDelegate
 
 	/// Creates a new evolution wrapper.
-	init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate) {
+	public init(fitnessEvaluator: Eval, loggingDelegate: LogDelegate) {
 		self.fitnessEvaluator = fitnessEvaluator
 		self.loggingDelegate = loggingDelegate
 	}
 
-	func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
+	public func evolve(population: Population<Eval.G>, configuration: EvolutionAlgorithmConfiguration) {
 		for i in 0..<configuration.maxEpochs {
 			// Log start of epoch.
 			loggingDelegate.evolutionStartingEpoch(i)

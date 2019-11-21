@@ -10,14 +10,20 @@ import Foundation
 
 /// The high-level configuration for a GA. Hyperparameters that are too broad to be considered part of a
 /// `GeneticEnvironment` are included here.
-struct EvolutionAlgorithmConfiguration {
-	let maxEpochs: Int
-	let algorithmType: EvolutionAlgorithmType
+public struct EvolutionAlgorithmConfiguration {
+	public let maxEpochs: Int
+	public let algorithmType: EvolutionAlgorithmType
+	
+	/// Creates a new EA configruation.
+	public init(maxEpochs: Int, algorithmType: EvolutionAlgorithmType) {
+		self.maxEpochs = maxEpochs
+		self.algorithmType = algorithmType
+	}
 }
 
 /// Implemented by types that contain a GA, simplifying the process of evolution
 /// to only require a starting population and a fitness evaluator.
-protocol EvolutionWrapper {
+public protocol EvolutionWrapper {
 	associatedtype Eval: FitnessEvaluator
 	
 	/// The fitness evaluator that the GA uses.
@@ -33,7 +39,7 @@ protocol EvolutionWrapper {
 }
 
 extension EvolutionWrapper {
-	mutating func afterEachEpoch(_ afterEachEpochFn: @escaping (Int) -> ()) {
+	mutating public func afterEachEpoch(_ afterEachEpochFn: @escaping (Int) -> ()) {
 		afterEachEpochFns.append(afterEachEpochFn)
 	}
 }
