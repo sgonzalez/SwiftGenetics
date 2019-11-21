@@ -47,7 +47,7 @@ public struct LivingForestGenome<GeneType: TreeGeneType>: Genome {
 	}
 	
 	/// Returns a deep copy.
-	func copy() -> LivingForestGenome {
+	public func copy() -> LivingForestGenome {
 		return LivingForestGenome(trees: trees.map { $0.copy() })
 	}
 	
