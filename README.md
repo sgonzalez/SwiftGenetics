@@ -70,6 +70,17 @@ struct ExampleFitnessEvaluator: SynchronousFitnessEvaluator {
 
 There are no external dependencies, yeehaw! On macOS, you can get off the ground running. Linux should be supported out-of-the-box too, but I haven't tested it, so feel free to let me know if something doesn't work right.
 
+## Citing
+
+If you use **SwiftGenetics** in a publication, you can use the following BibTeX entry to cite this project:
+
+```
+@misc{swiftgenetics,
+	Title = {SwiftGenetics},
+	Author = {Santiago Gonzalez},
+	howpublished = {\url{https://github.com/sgonzalez/SwiftGenetics}}
+}
+```
 
 ## Future Work
 
