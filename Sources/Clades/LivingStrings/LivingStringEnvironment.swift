@@ -20,7 +20,7 @@ public struct LivingStringEnvironment: GeneticEnvironment {
 	public var crossoverRate: Double
 	public var numberOfElites: Int
 	public var numberOfEliteCopies: Int
-	public var parameters: [String : Any]
+	public var parameters: [String : AnyCodable]
 
 	// MARK: Implementation-Specific Constants
 
@@ -34,7 +34,7 @@ public struct LivingStringEnvironment: GeneticEnvironment {
 		crossoverRate: Double,
 		numberOfElites: Int,
 		numberOfEliteCopies: Int,
-		parameters: [String : Any]
+		parameters: [String : AnyCodable]
 	) {
 		self.populationSize = populationSize
 		self.selectionMethod = selectionMethod

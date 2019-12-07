@@ -10,7 +10,7 @@ import Foundation
 
 /// DIfferent types of categorical distributions should implement this protocol.
 /// - Note: Any `CaseIterable` `enum` supports `DiscreteChoice` out of the box.
-public protocol DiscreteChoice: CaseIterable, Hashable { }
+public protocol DiscreteChoice: CaseIterable, Hashable, Codable { }
 
 /// A single gene that represents a discrete, categorical choice.
 public struct DiscreteChoiceGene<C: DiscreteChoice, E: GeneticEnvironment>: Gene {
@@ -29,6 +29,13 @@ public struct DiscreteChoiceGene<C: DiscreteChoice, E: GeneticEnvironment>: Gene
 		
 		// Select a new choice randomly.
 		choice = C.allCases.filter { $0 != choice }.randomElement()!
+	}
+	
+	// MARK: - Coding.
+	
+	/// Coding keys for `Codable`.
+	enum CodingKeys: String, CodingKey {
+		case choice
 	}
 }
 

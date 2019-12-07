@@ -88,6 +88,8 @@ final public class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 		}
 	}
 	
+	// MARK: - Enumeration, tree operations, and book-keeping.
+	
 	/// Performs a bottom-up, depth-first enumeration of the tree, including self.
 	public func bottomUpEnumerate(eachNode fn: (LivingTreeGene) -> ()) {
 		for child in children {
@@ -118,6 +120,38 @@ final public class LivingTreeGene<GeneType: TreeGeneType>: Gene {
 			child.parent = self
 			child.recursivelyResetParents()
 		}
+	}
+	
+	// MARK: - Coding.
+	
+	/// Coding keys for `Codable`.
+	enum CodingKeys: String, CodingKey {
+		case template
+		case geneType
+		case children
+		case coefficient
+		case allowsCoefficient
+	}
+	
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(template, forKey: .template)
+		try container.encode(geneType, forKey: .geneType)
+		try container.encode(children, forKey: .children)
+		try container.encode(coefficient, forKey: .coefficient)
+		try container.encode(allowsCoefficient, forKey: .allowsCoefficient)
+	}
+	
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		template = try values.decode(type(of: template), forKey: .template)
+		geneType = try values.decode(GeneType.self, forKey: .geneType)
+		children = try values.decode(type(of: children), forKey: .children)
+		coefficient = try values.decode(type(of: coefficient), forKey: .coefficient)
+		allowsCoefficient = try values.decode(type(of: allowsCoefficient), forKey: .allowsCoefficient)
+		
+		// Rebuild parent relationships.
+		recursivelyResetParents()
 	}
 	
 }

@@ -20,7 +20,7 @@ public struct LivingTreeEnvironment: GeneticEnvironment {
 	public var crossoverRate: Double
 	public var numberOfElites: Int
 	public var numberOfEliteCopies: Int
-	public var parameters: [String : Any]
+	public var parameters: [String : AnyCodable]
 	
 	// MARK: Implementation-Specific Constants
 	
@@ -42,7 +42,7 @@ public struct LivingTreeEnvironment: GeneticEnvironment {
 		crossoverRate: Double,
 		numberOfElites: Int,
 		numberOfEliteCopies: Int,
-		parameters: [String : Any],
+		parameters: [String : AnyCodable],
 		scalarMutationMagnitude: Int,
 		structuralMutationDeletionRate: Double,
 		structuralMutationAdditionRate: Double

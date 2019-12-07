@@ -9,7 +9,7 @@
 import Foundation
 
 /// An environment where evolution takes place.
-public protocol GeneticEnvironment: GeneticConstants {
+public protocol GeneticEnvironment: GeneticConstants, Codable {
 	
 }
 
@@ -19,17 +19,17 @@ public protocol GeneticEnvironmentAssociable {
 }
 
 /// An individual genetic element.
-public protocol Gene: Mutatable {
+public protocol Gene: Mutatable, Codable {
 	
 }
 
 /// A collection of genes.
-public protocol Genome: Mutatable, Crossoverable {
+public protocol Genome: Mutatable, Crossoverable, Codable {
 	
 }
 
 /// Represents a specific, individual organism with a fitness and genome.
-public class Organism<G: Genome> {
+public class Organism<G: Genome>: Codable {
 	/// A unique identifier for this organism.
 	public let uuid: UUID
 	/// This organism's fitness value, or `nil` if it is unknown.

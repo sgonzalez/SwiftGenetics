@@ -41,25 +41,25 @@ public struct ContinuousGene<R: FloatingPoint, E: GeneticEnvironment>: Gene, Equ
 		guard Double.fastRandomUniform() < rate else { return }
 		
 		// Get environmental mutation parameters.
-		guard let mutationSize = environment.parameters[Param.mutationSize.rawValue] as? Double else {
+		guard let mutationSize = environment.parameters[Param.mutationSize.rawValue]!.value as? Double else {
 			fatalError("Expected \(Param.mutationSize.rawValue): Double in environment parameters!")
 		}
-		guard let mutationType = environment.parameters[Param.mutationType.rawValue] as? ContinuousMutationType else {
+		guard let mutationType = environment.parameters[Param.mutationType.rawValue]!.value as? ContinuousMutationType else {
 			fatalError("Expected \(Param.mutationType.rawValue): MutationType in environment parameters!")
 		}
 		
 		// Perform the appropriate mutation.
 		switch mutationType {
 		case .uniform:
-			value += genericize(Double.random(in: (-mutationSize)...mutationSize))
+			value += ContinuousGene.genericize(Double.random(in: (-mutationSize)...mutationSize))
 		case .gaussian:
-			value += genericize(Double.randomGaussian(mu: 0.0, sigma: mutationSize))
+			value += ContinuousGene.genericize(Double.randomGaussian(mu: 0.0, sigma: mutationSize))
 		}
 	}
 	
 	/// Converts the input `Double` into the gene's generic floating-point type.
 	/// This is slightly ugly, but I can't think of a cleaner way to do this.
-	private func genericize(_ num: Double) -> R {
+	private static func genericize(_ num: Double) -> R {
 		switch R.self {
 		case is Float.Type:
 			return Float(num) as! R
@@ -72,11 +72,39 @@ public struct ContinuousGene<R: FloatingPoint, E: GeneticEnvironment>: Gene, Equ
 		}
 	}
 	
+	// MARK: - Comparability.
+	
 	public static func == (lhs: ContinuousGene, rhs: ContinuousGene) -> Bool {
 		return lhs.value == rhs.value // TODO: maybe this could cause issues, bad to compare IEEE float equality...
 	}
 
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(value)
+	}
+	
+	// MARK: - Coding.
+	
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.singleValueContainer()
+		switch R.self {
+		case is Float.Type:
+			try container.encode(value as! Float)
+		case is Double.Type:
+			try container.encode(value as! Double)
+		default:
+			fatalError("Unhandled floating-point type.")
+		}
+	}
+	
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.singleValueContainer()
+		switch R.self {
+		case is Float.Type:
+			value = try ContinuousGene.genericize(Double(values.decode(Float.self)))
+		case is Double.Type:
+			value = try ContinuousGene.genericize(values.decode(Double.self))
+		default:
+			fatalError("Unhandled floating-point type.")
+		}
 	}
 }

@@ -28,5 +28,5 @@ public protocol GeneticConstants {
 	var numberOfEliteCopies: Int { get }
 	
 	/// A dictionary of additional parameters.
-	var parameters: [String: Any] { get }
+	var parameters: [String: AnyCodable] { get }
 }

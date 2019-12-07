@@ -53,8 +53,8 @@ final class GeneticAlgorithmIntegrationTests: XCTestCase {
 			numberOfElites: 4,
 			numberOfEliteCopies: 1,
 			parameters: [
-				ContinuousEnvironmentParameter.mutationSize.rawValue: 0.1,
-				ContinuousEnvironmentParameter.mutationType.rawValue: ContinuousMutationType.uniform
+				ContinuousEnvironmentParameter.mutationSize.rawValue: AnyCodable(0.1),
+				ContinuousEnvironmentParameter.mutationType.rawValue: AnyCodable(ContinuousMutationType.uniform)
 			]
 		)
 		// Build initial population.
