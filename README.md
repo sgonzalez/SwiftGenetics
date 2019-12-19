@@ -50,16 +50,16 @@ An end-to-end example of evolution wrapper use can be found in `Tests/SwiftGenet
 
 ### Checkpointing
 
-Every state object in `SwiftGenetics` conforms to the Swift `Codable` protocol, allowing serialization and deserialization. The `CheckpointManager` provides a lovely abstraction for this that allows writing and reading checkpoints in one line:
+Every state object in **SwiftGenetics** conforms to the Swift `Codable` protocol, allowing serialization and deserialization. The `CheckpointManager` provides a lovely abstraction for this that allows writing and reading checkpoints in one line:
 
 ```swift
-typealias G = SomeConcreteGenomeType
+typealias G = ... // A concrete Genome type.
 let population: Population<G> = ...
 let checkpointFile: URL = ...
 // Save the population to a checkpoint
-try! CheckpointManager<G>.save(population, to: checkpointFile)
+try CheckpointManager<G>.save(population, to: checkpointFile)
 // Build a new population from the checkpoint.
-let reconstitutedPopulation = try! CheckpointManager<G>.population(from: checkpointFile)
+let reconstitutedPopulation = try CheckpointManager<G>.population(from: checkpointFile)
 ```
 
 ### Concrete Example
