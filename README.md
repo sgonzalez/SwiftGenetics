@@ -27,7 +27,8 @@
 
 The library also provides the following primitives that you can use to build your own complex genomes:
 
-* `DiscreteChoiceGene` to represent a discrete choice in a set. 
+* `ContinuousGene` to represent a single floating-point value.
+* `DiscreteChoiceGene` to represent a discrete choice in a set.
 
 
 ## Usage
@@ -46,6 +47,20 @@ Oftentimes you might have long-running fitness calculations that you want to run
 One cool feature that `ConcurrentAsynchronousEvaluationGA` has is the ability to detect and efficiently handle duplicate genomes within a generation (based on their hash value from a conformance to `Hashable`).
 
 An end-to-end example of evolution wrapper use can be found in `Tests/SwiftGeneticsTests/Integration/GeneticAlgorithmIntegrationTests.swift`. Specifically, the `testSortingGA` integration test shows how **SwiftGenetics** can be used to evolve vectors of continuous values.
+
+### Checkpointing
+
+Every state object in `SwiftGenetics` conforms to the Swift `Codable` protocol, allowing serialization and deserialization. The `CheckpointManager` provides a lovely abstraction for this that allows writing and reading checkpoints in one line:
+
+```swift
+typealias G = SomeConcreteGenomeType
+let population: Population<G> = ...
+let checkpointFile: URL = ...
+// Save the population to a checkpoint
+try! CheckpointManager<G>.save(population, to: checkpointFile)
+// Build a new population from the checkpoint.
+let reconstitutedPopulation = try! CheckpointManager<G>.population(from: checkpointFile)
+```
 
 ### Concrete Example
 
@@ -91,4 +106,3 @@ If you use **SwiftGenetics** in a publication, you can use the following BibTeX 
 * Generalize `coefficient` in `LivingTreeGene`.
 * More tests (unit, integration, performance).
 * Test app that visualizes the evolution process.
-* Checkpointing.

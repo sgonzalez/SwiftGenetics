@@ -9,7 +9,7 @@
 import Foundation
 
 /// DIfferent types of categorical distributions should implement this protocol.
-/// - Note: Any `CaseIterable` `enum` supports `DiscreteChoice` out of the box.
+/// - Note: Any `CaseIterable` `enum` with `Codable` conformance supports `DiscreteChoice` out of the box.
 public protocol DiscreteChoice: CaseIterable, Hashable, Codable { }
 
 /// A single gene that represents a discrete, categorical choice.

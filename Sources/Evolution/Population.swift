@@ -7,13 +7,13 @@
 //
 
 /// Defines broad types of genetic algorithms.
-public enum EvolutionAlgorithmType {
+public enum EvolutionAlgorithmType: String, Codable {
 	/// A standard, single-objective genetic algorithm.
 	case standard
 }
 
 /// A world of organisms, genericized by a type of genome.
-public class Population<G: Genome> {
+public class Population<G: Genome>: Codable {
 	
 	public typealias Environment = G.Environment
 	
@@ -38,11 +38,28 @@ public class Population<G: Genome> {
 	/// This average fitness of this generation's organisms.
 	private(set) internal var averageFitness: Double = 0.0
 	
+	
 	/// Creates a new, empty population with the given environment configuration.
 	public init(environment: Environment, evolutionType: EvolutionAlgorithmType) {
 		self.environment = environment
 		self.evolutionType = evolutionType
 	}
+	
+	// MARK: - Coding.
+	
+	/// Coding keys for `Codable`.
+	enum CodingKeys: String, CodingKey {
+		case environment
+		case evolutionType
+		case organisms
+		case generation
+		case bestOrganism
+		case bestOrganismInGeneration
+		case totalFitness
+		case averageFitness
+	}
+	
+	// MARK: - Evolution
 	
 	/// Updates the population's fitness metrics for an epoch.
 	private func updateFitnessMetrics() {

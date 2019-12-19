@@ -27,6 +27,7 @@ public protocol GeneticConstants {
 	/// The number of copies of each elite that are passed down to the next generation.
 	var numberOfEliteCopies: Int { get }
 	
-	/// A dictionary of additional parameters.
+	/// A dictionary of additional parameters. The requirement for primitive values to be wrapped in
+	/// an `AnyCodable` object is clunky, but necessary for serialization.
 	var parameters: [String: AnyCodable] { get }
 }

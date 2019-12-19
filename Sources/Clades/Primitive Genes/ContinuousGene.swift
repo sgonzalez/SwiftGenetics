@@ -9,7 +9,7 @@
 import Foundation
 
 /// The types of mutations that can be performed on a real-valued gene.
-public enum ContinuousMutationType {
+public enum ContinuousMutationType: String {
 	/// Add a sample from a uniform distribution, centered at zero, to the value.
 	case uniform
 	/// Add a sample from a Gaussian distribution, centered at zero, to the value.
@@ -44,7 +44,7 @@ public struct ContinuousGene<R: FloatingPoint, E: GeneticEnvironment>: Gene, Equ
 		guard let mutationSize = environment.parameters[Param.mutationSize.rawValue]!.value as? Double else {
 			fatalError("Expected \(Param.mutationSize.rawValue): Double in environment parameters!")
 		}
-		guard let mutationType = environment.parameters[Param.mutationType.rawValue]!.value as? ContinuousMutationType else {
+		guard let rawMutationType = environment.parameters[Param.mutationType.rawValue]!.value as? String, let mutationType = ContinuousMutationType(rawValue: rawMutationType) else {
 			fatalError("Expected \(Param.mutationType.rawValue): MutationType in environment parameters!")
 		}
 		
