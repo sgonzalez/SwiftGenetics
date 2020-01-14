@@ -10,16 +10,17 @@ import Foundation
 
 #if os(Linux)
 fileprivate var _wrap_arc4random_FIRST_CALL = true
+@usableFromInline
 func _wrap_arc4random() -> UInt32 {
 	// Non-BSD distributions don't have arc4random().
 	if _wrap_arc4random_FIRST_CALL {
 		srandom(UInt32(time(nil))) // We need to seed random(). Grrr.
 		_wrap_arc4random_FIRST_CALL = false
 	}
-	return random()
+	return UInt32(random())
 }
 #else
-let _wrap_arc4random = arc4random()
+@usableFromInline let _wrap_arc4random = arc4random
 #endif
 
 extension Double {
