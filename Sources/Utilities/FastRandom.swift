@@ -20,7 +20,7 @@ func _wrap_arc4random() -> UInt32 {
 }
 #else
 let _wrap_arc4random = arc4random()
-#else
+#endif
 
 extension Double {
 	
