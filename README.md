@@ -83,7 +83,7 @@ struct ExampleFitnessEvaluator: SynchronousFitnessEvaluator {
 
 ### Dependencies
 
-There are no external dependencies, yeehaw! On macOS, you can get off the ground running. Linux should be supported out-of-the-box too, but I haven't tested it, so feel free to let me know if something doesn't work right.
+There are no external dependencies, yeehaw! On macOS, you can get off the ground running. Linux is supported out-of-the-box too!
 
 ## Citing
 
